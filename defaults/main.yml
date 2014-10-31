@@ -1,0 +1,11 @@
+---
+# defaults file for .
+symfony_composer_path: false
+symfony_strategy: git
+symfony_branch: master
+symfony_env: prod
+symfony_php_path: /usr/bin/php
+symfony_composer_options: --no-dev --no-interaction --optimize-autoloader
+symfony_asset_options: ''
+symfony_releases: 5
+symfony_local_root: ./

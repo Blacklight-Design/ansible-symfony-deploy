@@ -1,0 +1,22 @@
+# Deployment role for Symfony apps.
+# Brought to you by Blacklight - http://www.blacklight.co.za/.
+# Developer: Zander Janse van Rensburg <zjvren@geevcookie.com>
+# License: MIT
+---
+- name: Create deployment directory.
+  include: directory.yml
+
+- name: Deploy the code.
+  include: deploy.yml
+
+- name: Create symlinks.
+  include: symlinks.yml
+
+- name: Dump assets.
+  shell: cd {{ symfony_root_dir }}/releases/{{ release_version.stdout }} && {{ symfony_php_path }} app/console assetic:dump --env={{ symfony_env }} {{ symfony_asset_options }}
+
+- name: Create symlink to newest release.
+  file: state=link src={{ symfony_root_dir }}/releases/{{ release_version.stdout }} path={{ symfony_root_dir }}/current
+
+- name: Run cleanup of old releases.
+  shell: ls -dt {{ symfony_root_dir }}/releases/* | tail -n +{{ symfony_releases + 1 }} | xargs rm -fr

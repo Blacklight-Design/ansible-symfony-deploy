@@ -1,0 +1,25 @@
+# Deployment role for Symfony apps.
+# Brought to you by Blacklight - http://www.blacklight.co.za/.
+# Developer: Zander Janse van Rensburg <zjvren@geevcookie.com>
+# License: MIT
+#
+# Handles the creation of the deployment and shared directories.
+---
+- name: Get release version.
+  shell: date +%s
+  register: release_version
+
+- name: Create the release directory.
+  file: state=directory path={{ symfony_root_dir }}/releases/{{ release_version.stdout }}
+
+- name: Create the shared directory.
+  file: state=directory path={{ symfony_root_dir }}/shared
+
+- name: Create the shared app/config directory.
+  file: state=directory path={{ symfony_root_dir }}/shared/app/config
+
+- name: Create the shared web/uploads directory.
+  file: state=directory path={{ symfony_root_dir }}/shared/web/uploads
+
+- name: Create the shared app/logs directory.
+  file: state=directory path={{ symfony_root_dir }}/shared/app/logs

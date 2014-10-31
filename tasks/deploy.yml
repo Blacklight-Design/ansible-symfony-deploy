@@ -1,0 +1,22 @@
+# Deployment role for Symfony apps.
+# Brought to you by Blacklight - http://www.blacklight.co.za/.
+# Developer: Zander Janse van Rensburg <zjvren@geevcookie.com>
+# License: MIT
+#
+# Handles the deployment based on the strategy specified.
+---
+- name: RSync deploy.
+  synchronize: src={{ symfony_local_root }} dest={{ symfony_root_dir }}/releases/{{ release_version.stdout }}
+  when: symfony_strategy == "rsync"
+
+- name: Git deploy.
+  git: repo={{ symfony_repo }} dest={{ symfony_root_dir }}/releases/{{ release_version.stdout }} version={{ symfony_branch }}
+  when: symfony_strategy == "git"
+
+- name: SVN deploy.
+  subversion: repo={{ symfony_repo }} dest={{ symfony_root_dir }}/releases/{{ release_version.stdout }} revision={{ symfony_branch }}
+  when: symfony_strategy == "svn"
+
+- name: Mercurial deploy.
+  hg: repo={{ symfony_repo }} dest={{ symfony_root_dir }}/releases/{{ release_version.stdout }} revision={{ symfony_branch }}
+  when: symfony_strategy == "mercurial"

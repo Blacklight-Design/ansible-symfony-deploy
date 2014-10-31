@@ -1,0 +1,36 @@
+# Deployment role for Symfony apps.
+# Brought to you by Blacklight - http://www.blacklight.co.za/.
+# Developer: Zander Janse van Rensburg <zjvren@geevcookie.com>
+# License: MIT
+#
+# This file handles the creation of symlinks to the new release.
+---
+- name: Check if parameters.yml exists
+  stat: path={{ symfony_root_dir }}/shared/app/config/parameters.yml
+  register: parameters_file
+
+- name: Create symlink for parameters.yml from shared directory
+  shell: ln -s {{ symfony_root_dir }}/shared/app/config/parameters.yml {{ symfony_root_dir }}/releases/{{ release_version.stdout }}/app/config/parameters.yml creates={{ symfony_root_dir }}/releases/{{release_version.stdout}}/app/config/parameters.yml
+  when: parameters_file.stat.exists
+
+- name: Check if logs directory exists
+  stat: path={{ symfony_root_dir }}/releases/{{ release_version.stdout }}/app/logs
+  register: logs_path
+
+- name: Delete logs directory
+  shell: rm -fr {{ symfony_root_dir }}/releases/{{ release_version.stdout }}/app/logs
+  when: logs_path.stat.exists
+
+- name: Create logs symlink
+  file: state=link src={{ symfony_root_dir }}/shared/app/logs path={{ symfony_root_dir }}/releases/{{ release_version.stdout }}/app/logs
+
+- name: Check if uploads directory exists
+  stat: path={{ symfony_root_dir }}/releases/{{ release_version.stdout }}/web/uploads
+  register: uploads_path
+
+- name: Delete uploads directory
+  shell: rm -fr {{ symfony_root_dir }}/releases/{{ release_version.stdout }}/web/uploads
+  when: uploads_path.stat.exists
+
+- name: Create uploads symlink
+  file: state=link src={{ symfony_root_dir }}/shared/web/uploads path={{ symfony_root_dir }}/releases/{{ release_version.stdout }}/web/uploads

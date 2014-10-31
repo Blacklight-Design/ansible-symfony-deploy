@@ -1,0 +1,95 @@
+# Symfony Deploy
+
+Deployment role for Symfony 2 apps. Tries to imitate a similar structure to what you would see with other deployment tools
+such as [Capistrano](http://capistranorb.com/). The final directory structure will look something like this:
+
+```
+project
+    releases
+        // All releases will be going here
+    shared
+        app
+            config
+                parameters.yml
+            logs
+        web
+            uploads
+    current // This will be a symlink to the latest release
+```
+
+Requirements
+------------
+
+The only requirement is Ansbile >= 1.2.
+
+Installation
+------------
+
+```
+ansible-galaxy install blacklight.symfony-deploy
+```
+
+Role Variables
+--------------
+
+### symfony_root_dir (Required)
+
+The root directory of the project.
+
+### symfony_repo (Required)
+
+The URL to the repo containing the application code.
+
+### symfony_branch (Defaults: master)
+
+The branch that you would like to deploy.
+
+### symfony_env (Defaults: prod)
+
+Sets the Symfony environment. During the process this is used in composer commands as follows:
+
+```bash
+SYMFONY_ENV=prod composer...
+```
+
+### symfony_composer_path (Defaults: false)
+
+The path to an existing composer installation. If set to false, the role will automatically download composer into the
+projects root directory.
+
+### symfony_composer_options (Defaults: --no-dev --no-interaction --optimize-autoloader)
+
+Flags to add to the composer install command.
+
+### symfony_asset_options: (Defaults: '')
+
+Flags to add to the assetic:dump command.
+
+### symfony_php_path (Defaults: /usr/bin/php)
+
+The path to PHP. This is only used when the role has to download composer.
+
+### symfony_releases (Defaults: 5)
+
+The amount of releases to keep in the releases directory.
+
+Example Playbook
+----------------
+
+```yml
+---
+- hosts: web
+  vars:
+    symfony_root_dir: /var/www/example
+    symfony_repo: git@github.com/example/example-project.git
+    symfony_composer_options: '--no-dev --optimize-autoloader --no-interaction'
+    ansible_ssh_user: root
+
+  roles:
+    - blacklight.symfony-deploy
+```
+
+License
+-------
+
+MIT
