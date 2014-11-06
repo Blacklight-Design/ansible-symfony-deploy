@@ -6,7 +6,7 @@
 # Handles the deployment based on the strategy specified.
 ---
 - name: RSync deploy.
-  synchronize: src={{ symfony_local_root }} dest={{ symfony_root_dir }}/releases/{{ release_version.stdout }} set_remote_user=true
+  synchronize: src={{ symfony_local_root }} dest={{ symfony_root_dir }}/releases/{{ release_version.stdout }} set_remote_user=no
   when: symfony_strategy == "rsync"
 
 - name: Git deploy.
