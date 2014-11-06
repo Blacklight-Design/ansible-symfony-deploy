@@ -1,7 +1,10 @@
 # Symfony Deploy
 
-Deployment role for Symfony 2 apps. Tries to imitate a similar structure to what you would see with other deployment tools
-such as [Capistrano](http://capistranorb.com/). The final directory structure will look something like this:
+Brought to you by [Blacklight](http://www.blacklight.co.za).
+
+Deployment role for Symfony 2 apps. Deployment can be done via Git, SVN, Mercurial, and Rsync. Tries to imitate a similar
+structure to what you would see with other deployment tools such as [Capistrano](http://capistranorb.com/). The final
+directory structure will look something like this:
 
 ```
 project
@@ -43,6 +46,14 @@ The URL to the repo containing the application code.
 ### symfony_branch (Defaults: master)
 
 The branch that you would like to deploy.
+
+### symfony_strategy (Defaults: git)
+
+The deployment strategy to use. Available options: git, svb, mercurial, rsync
+
+### symfony_local_root (Defaults: ./)
+
+This option is only used when deploying via Rsync. It defines the path to the local folder to upload to the server.
 
 ### symfony_env (Defaults: prod)
 
