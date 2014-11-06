@@ -11,33 +11,33 @@
 
 - name: Cleanup on deployment failure.
   shell: rm -fr {{ symfony_root_dir }}/releases/{{ release_version.stdout }}
-  when: deployed|fail
+  when: deployed|failed
 
 - name: Check if processing needs to continue.
   fail: Code could not be deployed!
-  when: deployed|fail
+  when: deployed|failed
 
 - name: Create symlinks.
   include: symlinks.yml
 
 - name: Cleanup on symlinks failure.
   shell: rm -fr {{ symfony_root_dir }}/releases/{{ release_version.stdout }}
-  when: symlinks_created|fail
+  when: symlinks_created|failed
 
 - name: Check if processing needs to continue.
   fail: Symlinks could not be created!
-  when: symlinks_created|fail
+  when: symlinks_created|failed
 
 - name: Run Composer.
   include: composer.yml
 
 - name: Cleanup on Composer failure.
   shell: rm -fr {{ symfony_root_dir }}/releases/{{ release_version.stdout }}
-  when: composer_install_complete|fail
+  when: composer_install_complete|failed
 
 - name: Check if processing needs to continue.
   fail: Composer install failed!
-  when: composer_install_complete|fail
+  when: composer_install_complete|failed
 
 - name: Dump assets.
   shell: cd {{ symfony_root_dir }}/releases/{{ release_version.stdout }} && {{ symfony_php_path }} app/console assetic:dump --env={{ symfony_env }} {{ symfony_asset_options }}
@@ -51,11 +51,11 @@
 
 - name: Cleanup on final steps failure.
   shell: rm -fr {{ symfony_root_dir }}/releases/{{ release_version.stdout }}
-  when: dump_assets|fail or current_symlink|fail
+  when: dump_assets|failed or current_symlink|failed
 
 - name: Check if processing needs to continue.
   fail: Could not finish off final steps!
-  when: dump_assets|fail or current_symlink|fail
+  when: dump_assets|failed or current_symlink|failed
 
 - name: Run cleanup of old releases.
   shell: ls -dr {{ symfony_root_dir }}/releases/* | tail -n +{{ symfony_releases + 1 }} | xargs rm -fr
