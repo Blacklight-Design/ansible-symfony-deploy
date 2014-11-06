@@ -8,29 +8,46 @@
 - name: Check if parameters.yml exists
   stat: path={{ symfony_root_dir }}/shared/app/config/parameters.yml
   register: parameters_file
+  ignore_errors: true
 
 - name: Create symlink for parameters.yml from shared directory
   shell: ln -s {{ symfony_root_dir }}/shared/app/config/parameters.yml {{ symfony_root_dir }}/releases/{{ release_version.stdout }}/app/config/parameters.yml creates={{ symfony_root_dir }}/releases/{{release_version.stdout}}/app/config/parameters.yml
-  when: parameters_file.stat.exists
+  when: paremters_file|success and parameters_file.stat.exists
+  register: parameters_symlink
+  ignore_errors: true
 
 - name: Check if logs directory exists
   stat: path={{ symfony_root_dir }}/releases/{{ release_version.stdout }}/app/logs
   register: logs_path
+  when: parameters_symlink|success
+  ignore_errors: true
 
 - name: Delete logs directory
   shell: rm -fr {{ symfony_root_dir }}/releases/{{ release_version.stdout }}/app/logs
-  when: logs_path.stat.exists
+  when: logs_path|success and logs_path.stat.exists
+  register: logs_directory_deleted
+  ignore_errors: true
 
 - name: Create logs symlink
   file: state=link src={{ symfony_root_dir }}/shared/app/logs path={{ symfony_root_dir }}/releases/{{ release_version.stdout }}/app/logs
+  when: logs_directory_deleted|success
+  register: logs_symlink
+  ignore_errors: true
 
 - name: Check if uploads directory exists
   stat: path={{ symfony_root_dir }}/releases/{{ release_version.stdout }}/web/uploads
   register: uploads_path
+  when: logs_symlink|success
+  ignore_errors: true
 
 - name: Delete uploads directory
   shell: rm -fr {{ symfony_root_dir }}/releases/{{ release_version.stdout }}/web/uploads
-  when: uploads_path.stat.exists
+  when: uploads_path|success and uploads_path.stat.exists
+  register: uploads_path_deleted
+  ignore_errors: true
 
 - name: Create uploads symlink
   file: state=link src={{ symfony_root_dir }}/shared/web/uploads path={{ symfony_root_dir }}/releases/{{ release_version.stdout }}/web/uploads
+  when: uploads_path_deleted|success
+  register: symlinks_created
+  ignore_errors: true

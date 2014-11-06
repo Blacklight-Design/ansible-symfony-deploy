@@ -9,15 +9,22 @@
   stat: path={{ symfony_root_dir }}/composer.phar
   register: composer_file
   when: not symfony_composer_path
+  ignore_errors: true
 
 - name: Install composer
   get_url: url=https://getcomposer.org/composer.phar dest={{ symfony_root_dir }}/composer.phar mode=0755 validate_certs=no
-  when: not symfony_composer_path and not composer_file.stat.exists
+  when: composer_file|success and not symfony_composer_path and not composer_file.stat.exists
+  ignore_errors: true
+  register: composer_installed
 
 - name: Run composer install using downloaded version.
   shell: cd {{ symfony_root_dir }}/releases/{{ release_version.stdout }} && SYMFONY_ENV={{ symfony_env }} {{ symfony_php_path }} {{ symfony_root_dir }}/composer.phar install {{ symfony_composer_options }}
-  when: not symfony_composer_path
+  when: composer_installed|success and not symfony_composer_path
+  register: composer_install_complete
+  ignore_errors: true
 
 - name: Run composer install using global version.
   shell: cd {{ symfony_root_dir }}/releases/{{ release_version.stdout }} && SYMFONY_ENV={{ symfony_env }} {{ symfony_composer_path }} install {{ symfony_composer_options }}
   when: symfony_composer_path != false
+  register: composer_install_complete
+  ignore_errors: true

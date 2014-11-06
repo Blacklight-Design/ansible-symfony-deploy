@@ -5,18 +5,31 @@
 #
 # Handles the deployment based on the strategy specified.
 ---
+- name: Get local path.
+  local_action: shell pwd
+  register: local_path
+  ignore_errors: true
+
 - name: RSync deploy.
-  synchronize: src={{ symfony_local_root }} dest={{ symfony_root_dir }}/releases/{{ release_version.stdout }} set_remote_user=no
-  when: symfony_strategy == "rsync"
+  synchronize: src={{ local_path.stdout }}{{ symfony_local_root }} dest={{ symfony_root_dir }}/releases/{{ release_version.stdout }} times=no recursive=yes perms=no owner=no group=no
+  when: symfony_strategy == "rsync" and local_path|success
+  ignore_errors: true
+  register: deployed
 
 - name: Git deploy.
   git: repo={{ symfony_repo }} dest={{ symfony_root_dir }}/releases/{{ release_version.stdout }} version={{ symfony_branch }}
-  when: symfony_strategy == "git"
+  when: symfony_strategy == "git" and local_path|success
+  ignore_errors: true
+  register: deployed
 
 - name: SVN deploy.
   subversion: repo={{ symfony_repo }} dest={{ symfony_root_dir }}/releases/{{ release_version.stdout }} revision={{ symfony_branch }}
-  when: symfony_strategy == "svn"
+  when: symfony_strategy == "svn" and local_path|success
+  ignore_errors: true
+  register: deployed
 
 - name: Mercurial deploy.
   hg: repo={{ symfony_repo }} dest={{ symfony_root_dir }}/releases/{{ release_version.stdout }} revision={{ symfony_branch }}
-  when: symfony_strategy == "mercurial"
+  when: symfony_strategy == "mercurial" and local_path|success
+  ignore_errors: true
+  register: deployed
