@@ -6,7 +6,7 @@
 # Handles the download of composer and the install command.
 ---
 - name: Check if composer needs to be downloaded.
-  stat: file={{ symfony_root_dir }}/composer.phar
+  stat: path={{ symfony_root_dir }}/composer.phar
   register: composer_file
   when: not symfony_composer_path
 
