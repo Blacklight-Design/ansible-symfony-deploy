@@ -20,6 +20,9 @@ project
     current // This will be a symlink to the latest release
 ```
 
+The role also has error checking in place. If any of the steps fail the role will delete the newly created release folder
+and stop execution. If the deploy was successful the role will remove old releases.
+
 Requirements
 ------------
 
@@ -51,9 +54,11 @@ The branch that you would like to deploy.
 
 The deployment strategy to use. Available options: git, svb, mercurial, rsync
 
-### symfony_local_root (Defaults: ./)
+### symfony_local_root (Defaults: /)
 
 This option is only used when deploying via Rsync. It defines the path to the local folder to upload to the server.
+
+*Important Note!* The path is relative to your playbook file.
 
 ### symfony_env (Defaults: prod)
 

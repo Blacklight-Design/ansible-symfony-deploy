@@ -9,9 +9,6 @@
   shell: date +%s
   register: release_version
 
-- name: Create the release directory.
-  file: state=directory path={{ symfony_root_dir }}/releases/{{ release_version.stdout }}
-
 - name: Create the shared directory.
   file: state=directory path={{ symfony_root_dir }}/shared
 
@@ -23,3 +20,6 @@
 
 - name: Create the shared app/logs directory.
   file: state=directory path={{ symfony_root_dir }}/shared/app/logs
+
+- name: Create the release directory.
+  file: state=directory path={{ symfony_root_dir }}/releases/{{ release_version.stdout }}

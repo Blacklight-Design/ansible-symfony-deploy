@@ -12,7 +12,7 @@
 
 - name: Create symlink for parameters.yml from shared directory
   shell: ln -s {{ symfony_root_dir }}/shared/app/config/parameters.yml {{ symfony_root_dir }}/releases/{{ release_version.stdout }}/app/config/parameters.yml creates={{ symfony_root_dir }}/releases/{{release_version.stdout}}/app/config/parameters.yml
-  when: paremters_file|success and parameters_file.stat.exists
+  when: parameters_file|success and parameters_file.stat.exists
   register: parameters_symlink
   ignore_errors: true
 
