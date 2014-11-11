@@ -23,6 +23,13 @@ project
 The role also has error checking in place. If any of the steps fail the role will delete the newly created release folder
 and stop execution. If the deploy was successful the role will remove old releases.
 
+Other Deployment Roles
+----------------------
+
+Laravel4: [laravel4-deploy](https://galaxy.ansible.com/list#/roles/2146)
+
+Laravel5: [laravel5-deploy](https://galaxy.ansible.com/list#/roles/2145)
+
 Requirements
 ------------
 
