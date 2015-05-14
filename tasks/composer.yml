@@ -18,13 +18,13 @@
   register: composer_installed
 
 - name: Run composer install using downloaded version.
-  shell: cd {{ symfony_root_dir }}/releases/{{ release_version.stdout }} && SYMFONY_ENV={{ symfony_env }} {{ symfony_php_path }} {{ symfony_root_dir }}/composer.phar install {{ symfony_composer_options }}
+  shell: cd {{ symfony_root_dir }}/releases/{{ release_version.stdout }} && export SYMFONY_ENV={{ symfony_env }} && {{ symfony_php_path }} {{ symfony_root_dir }}/composer.phar install {{ symfony_composer_options }}
   when: composer_installed|success and not symfony_composer_path
   register: composer_install_complete
   ignore_errors: true
 
 - name: Run composer install using global version.
-  shell: cd {{ symfony_root_dir }}/releases/{{ release_version.stdout }} && SYMFONY_ENV={{ symfony_env }} {{ symfony_composer_path }} install {{ symfony_composer_options }}
+  shell: cd {{ symfony_root_dir }}/releases/{{ release_version.stdout }} && export SYMFONY_ENV={{ symfony_env }} && {{ symfony_composer_path }} install {{ symfony_composer_options }}
   when: symfony_composer_path != false
   register: composer_install_complete
   ignore_errors: true
