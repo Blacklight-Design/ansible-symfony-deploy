@@ -6,6 +6,7 @@
 # Handles the deployment based on the strategy specified.
 ---
 - name: Get local path.
+  become: false
   local_action: shell pwd
   register: local_path
   ignore_errors: true
