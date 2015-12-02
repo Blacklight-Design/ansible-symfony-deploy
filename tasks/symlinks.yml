@@ -51,3 +51,15 @@
   when: uploads_path_deleted|success
   register: symlinks_created
   ignore_errors: true
+
+- name: Delete additional symlinks
+  shell: rm -fr {{ symfony_root_dir }}/releases/{{ release_version.stdout }}/{{ item }}
+  ignore_errors: true
+  with_items: symfony_symlinks
+
+- name: Create additional symlinks
+  file: state=link src={{ symfony_root_dir }}/shared/{{item}} path={{ symfony_root_dir }}/releases/{{ release_version.stdout }}/{{item}}
+  register: additional_symlinks_created
+  ignore_errors: true
+  with_items: symfony_symlinks
+
