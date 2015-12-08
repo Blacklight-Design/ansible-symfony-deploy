@@ -9,3 +9,4 @@ symfony_composer_options: --no-dev --no-interaction --optimize-autoloader
 symfony_asset_options: ''
 symfony_releases: 5
 symfony_local_root: /
+symfony_symlinks: [ ]
