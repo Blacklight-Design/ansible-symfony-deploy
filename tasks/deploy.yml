@@ -18,7 +18,7 @@
   register: deployed
 
 - name: Git deploy.
-  git: repo={{ symfony_repo }} dest={{ symfony_root_dir }}/releases/{{ release_version.stdout }} version={{ symfony_branch }}
+  git: repo={{ symfony_repo }} dest={{ symfony_root_dir }}/releases/{{ release_version.stdout }} version={{ symfony_branch }} depth={{ symfony_git_depth }}
   when: symfony_strategy == "git" and local_path|success
   ignore_errors: true
   register: deployed

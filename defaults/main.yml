@@ -10,3 +10,5 @@ symfony_asset_options: ''
 symfony_releases: 5
 symfony_local_root: /
 symfony_symlinks: [ ]
+symfony_git_depth: 10
+
