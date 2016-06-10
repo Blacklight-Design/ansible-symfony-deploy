@@ -14,7 +14,7 @@
   when: deployed|failed
 
 - name: Check if processing needs to continue.
-  fail: Code could not be deployed!
+  fail: msg="Code could not be deployed!"
   when: deployed|failed
 
 - name: Create symlinks.
@@ -25,7 +25,7 @@
   when: symlinks_created|failed
 
 - name: Check if processing needs to continue.
-  fail: Symlinks could not be created!
+  fail: msg="Symlinks could not be created!"
   when: symlinks_created|failed
 
 - name: Run Composer.
@@ -36,7 +36,7 @@
   when: composer_install_complete|failed
 
 - name: Check if processing needs to continue.
-  fail: Composer install failed!
+  fail: msg="Composer install failed!"
   when: composer_install_complete|failed
 
 - name: Dump assets.
@@ -54,7 +54,7 @@
   when: dump_assets|failed or current_symlink|failed
 
 - name: Check if processing needs to continue.
-  fail: Could not finish off final steps!
+  fail: msg="Could not finish off final steps!"
   when: dump_assets|failed or current_symlink|failed
 
 - name: Run cleanup of old releases.
